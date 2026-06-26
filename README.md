@@ -23,20 +23,12 @@ WPF (.NET 8) utility for browsing and editing Epicor/Kinetic App Studio customiz
 {
   "Environments": [
     {
-      "Name": "KineticDev",
-      "ConnectionString": "Server=YOUR_SERVER;Database=KineticDev;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;"
+      "Name": "Environment1",
+      "ConnectionString": "Server=YOUR_SERVER;Database=YOUR_DB;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;"
     },
     {
-      "Name": "KineticTest",
-      "ConnectionString": "Server=YOUR_SERVER;Database=KineticTest;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;"
-    },
-    {
-      "Name": "KineticPilot",
-      "ConnectionString": "Server=YOUR_SERVER;Database=KineticPilot;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;"
-    },
-    {
-      "Name": "Live",
-      "ConnectionString": "Server=YOUR_LIVE_SERVER;Database=EpicorERP;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;"
+      "Name": "Environment2",
+      "ConnectionString": "Server=YOUR_SERVER;Database=YOUR_DB;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;"
     }
   ],
   "Query": {
@@ -63,6 +55,4 @@ Run the publish script to produce a single exe and copy it to your desktop:
 powershell -ExecutionPolicy Bypass -File .\publish.ps1
 ```
 
-Output: `bin\Release\framework-dependent\AppStudioJsonViewer.exe`
-
-The exe requires .NET 8 Desktop Runtime to be installed on any machine it runs on.
+The script builds the project, places the exe in `bin\Release\framework-dependent\`, then copies it to your desktop. The exe requires .NET 8 Desktop Runtime to be installed on any machine it runs on.
