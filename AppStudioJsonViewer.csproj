@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>AppStudioJsonViewer</RootNamespace>
+    <AssemblyName>AppStudioJsonViewer</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- appsettings.json is embedded so the published exe is fully standalone.
+         A loose appsettings.json placed next to the exe still overrides it. -->
+    <None Remove="appsettings.json" />
+    <EmbeddedResource Include="appsettings.json" />
+    <EmbeddedResource Include="Resources\Json.xshd" />
+    <Resource Include="Resources\icon.ico" />
+  </ItemGroup>
+
+</Project>

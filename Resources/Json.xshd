@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="Json" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <!-- Colors tuned for the dark editor background (VS Code Dark+ palette). -->
+  <Color name="Bool"        foreground="#569CD6" />
+  <Color name="Null"        foreground="#569CD6" />
+  <Color name="Number"      foreground="#B5CEA8" />
+  <Color name="String"      foreground="#CE9178" />
+  <Color name="FieldName"   foreground="#9CDCFE" fontWeight="bold" />
+  <Color name="Punctuation" foreground="#D4D4D4" />
+
+  <RuleSet>
+
+    <!-- A property name is a string immediately followed (ignoring spaces) by a colon.
+         This rule must come before the generic String span so keys win. -->
+    <Rule color="FieldName">
+      "(\\.|[^"\\])*"(?=\s*:)
+    </Rule>
+
+    <!-- String values -->
+    <Span color="String" multiline="false">
+      <Begin>"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <!-- escape sequences inside strings -->
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+
+    <Keywords color="Bool">
+      <Word>true</Word>
+      <Word>false</Word>
+    </Keywords>
+
+    <Keywords color="Null">
+      <Word>null</Word>
+    </Keywords>
+
+    <Rule color="Number">
+      \-?\b\d+(\.\d+)?([eE][+\-]?\d+)?\b
+    </Rule>
+
+    <Rule color="Punctuation">
+      [{}\[\],:]
+    </Rule>
+
+  </RuleSet>
+</SyntaxDefinition>
