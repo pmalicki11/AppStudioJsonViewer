@@ -1,26 +1,44 @@
 # AppStudioJsonViewer
 
-A small WPF (.NET 8) utility for viewing and editing Epicor App Studio
-customization-layer JSON stored in `Ice.XXXDef`.
+WPF (.NET 8) utility for browsing and editing Epicor/Kinetic App Studio customization-layer JSON stored in `Ice.XXXDef`.
 
 ## What it does
 
-1. **Landing page** — lists `Ice.XXXDef` rows where `TypeCode = KNTCCustLayer`,
-   showing `Key1` and `Key2`. `Key1` is a clickable link.
-2. **Editor** — clicking `Key1` opens that row's `Content` column, prettified
-   (indented + JSON syntax coloring via AvalonEdit).
-3. **Save** — you can edit the JSON and save it back to the database. It is
-   validated, then written **minified** (no indents or line breaks).
+- **Landing page** — lists `Ice.XXXDef` rows where `TypeCode = KNTCCustLayer`. Filter by Application ID or Layer Name, pick an environment, then click **Load**.
+- **Editor** — clicking a Layer Name opens that row's `Content` column, prettified with JSON syntax coloring (AvalonEdit). Ctrl+F to search within the JSON.
+- **Save** — edit the JSON and save it back to the database. Content is validated, then written minified.
+- JSON is fetched fresh from the database each time you open a layer — no stale cache.
+
+## Requirements
+
+- [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) (x64) must be installed on the machine.
+- Windows authentication access to the target SQL Server databases.
 
 ## Setup
 
-Edit `appsettings.json` (it is copied next to the .exe on build):
+1. Copy `appsettings.example.json` to `appsettings.json` next to the exe (or in the project root when running from source).
+2. Fill in the connection strings for each environment:
 
 ```json
 {
-  "ConnectionStrings": {
-    "Epicor": "Server=YOUR_SQL_SERVER\\INSTANCE;Database=YOUR_EPICOR_DB;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;"
-  },
+  "Environments": [
+    {
+      "Name": "KineticDev",
+      "ConnectionString": "Server=YOUR_SERVER;Database=KineticDev;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;"
+    },
+    {
+      "Name": "KineticTest",
+      "ConnectionString": "Server=YOUR_SERVER;Database=KineticTest;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;"
+    },
+    {
+      "Name": "KineticPilot",
+      "ConnectionString": "Server=YOUR_SERVER;Database=KineticPilot;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;"
+    },
+    {
+      "Name": "Live",
+      "ConnectionString": "Server=YOUR_LIVE_SERVER;Database=EpicorERP;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;"
+    }
+  ],
   "Query": {
     "Schema": "Ice",
     "Table": "XXXDef",
@@ -29,19 +47,22 @@ Edit `appsettings.json` (it is copied next to the .exe on build):
 }
 ```
 
-- Connection uses **Windows authentication** (`Integrated Security=true`), so the
-  Windows account running the app must have read/write access to the table.
-- `Schema` / `Table` / `TypeCode` are configurable if you ever need to point it
-  elsewhere.
+You can add or remove environments freely — the dropdown is populated from this list. The first entry is selected by default.
 
-## Run
+`appsettings.json` is gitignored. The example file is safe to commit.
+
+## Running
+
+Select an environment from the dropdown and click **Load**. Changing the environment clears the grid without loading — click Load again to fetch data for the new environment.
+
+## Building
+
+Run the publish script to produce a single exe and copy it to your desktop:
 
 ```powershell
-dotnet run --project AppStudioJsonViewer.csproj
+powershell -ExecutionPolicy Bypass -File .\publish.ps1
 ```
 
-## Update targeting
+Output: `bin\Release\framework-dependent\AppStudioJsonViewer.exe`
 
-Rows are updated by their full natural key:
-`Company, ProductID, TypeCode, Key1, Key2, Key3, CGCCode`. A save expects to
-affect exactly one row; anything else is reported and treated as suspect.
+The exe requires .NET 8 Desktop Runtime to be installed on any machine it runs on.
